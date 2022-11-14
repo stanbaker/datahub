@@ -86,23 +86,19 @@ const ArrowContainer = styled.div`
     margin-top: 40px;
 `;
 
-export const SchemaRow = ({
-    children,
-    className,
-    'data-row-key': fieldPath,
-}: {
-    children: any;
-    className: string;
-    'data-row-key': string;
-}) => {
+export const SchemaRow = React.forwardRef<HTMLTableRowElement>((props, ref) => {
+    /* eslint-disable react/prop-types */
+    const { children, ...rest } = props;
     const selectedFk = useContext(FkContext);
     const entityRegistry = useEntityRegistry();
     const baseEntity = useBaseEntity<GetDatasetQuery>();
 
     return (
         <>
-            <tr className={className}>{children}</tr>
-            {fieldPath && fieldPath === selectedFk?.fieldPath && (
+            <tr {...rest} ref={ref}>
+                {children}
+            </tr>
+            {selectedFk?.fieldPath && props['data-row-key'] === selectedFk?.fieldPath && (
                 <ForeignKeyContent>
                     <ForiegnKeyTd>
                         <HeaderContent>
@@ -150,4 +146,4 @@ export const SchemaRow = ({
             )}
         </>
     );
-};
+});
